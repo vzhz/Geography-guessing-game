@@ -1,7 +1,3 @@
-####
-#tutorial instructions that jump-started this project: https://openhatch.org/wiki/Flash_card_challenge
-####
-
 import random
 import unittest
 
@@ -56,7 +52,7 @@ def state_or_capital_first(generic_dict, user_choice):
 		user_answer = asks_user_question(user_choice, key)
 		percent = (points/count)*100
 		if user_answer == "quit" or user_answer == "exit":
-			break #maybe break and ask them if they are sure
+			break
 			dont_go = raw_input("Are you sure you want to leave? (Y/N)")
 			if dont_go == "Y" or dont_go == "y":
 				print "Ok, hope to see you soon!"
@@ -71,24 +67,22 @@ def state_or_capital_first(generic_dict, user_choice):
 			percent = (points/count)*100
 			print "Yay, you got points! Now at %d points with %d percent correct!" %(points, percent)
 		else:
-			#print "user answer = %s" % user_answer
-			#print "key.lower = %s" % key.lower()
 			print "Wrong! The correct answer is %s! Still %d points, now %d percent correct!" %(value, points, percent)
 		print action_based_on_precent(percent)
 		count += 1
-user_choice = raw_input("Would you like to be given a state and guess its capital or the other way around? If want to guess capitals, press 1. To guess states, press 2.")
-if user_choice == "1" or user_choice == "2":
-	pass
-else: 
-	user_choice = raw_input("Please (please please) type 1 for states->capitals or 2 for capitals->states. Jeezuuus, get it together.")
-user_choice = int(user_choice)
-if user_choice == 1:
-	state_or_capital_first(state_capital, user_choice)
-if user_choice == 2:
-	state_or_capital_first(capital_state, user_choice)
+done = False
+while not done:
+	try:
+		user_choice = int(raw_input("Would you like to be given a state and guess its capital or the other way around? If want to guess capitals, press 1. To guess states, press 2."))
+		if user_choice not in [1,2]:#in is for loop under hood
+			print "Please (please please) type 1 for states->capitals or 2 for capitals->states. Jeezuuus, get it together."
+		else:
+			done = True
+			user_choice = int(user_choice)
+			if user_choice == 1:
+				state_or_capital_first(state_capital, user_choice)
+			if user_choice == 2:
+				state_or_capital_first(capital_state, user_choice)
+	except ValueError:
+		print "1 and 2 are both numbers. I need a number.  Feed me numbers."
 
-####
-#testing on other quiz files
-#http://web.mit.edu/jesstess/www/IntermediatePythonWorkshop/metric.txt
-#http://web.mit.edu/jesstess/www/IntermediatePythonWorkshop/french_food.txt
-####
