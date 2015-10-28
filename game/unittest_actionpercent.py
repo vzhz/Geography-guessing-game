@@ -9,10 +9,18 @@ class Actiontest(unittest.TestCase):
 #    print string
 #    print "\n"*i #use fancy_print instead of print
 
+	def test_action_random(self):
+		random12 = random_action_1_2() #since it is just being called and not given an input is there anything to test?
+		self.assertEqual(random12, 1 or 2)
 #def choose_order_in_case_of_placeholder():
 #	mode = random.choice([1, 2])
 #	return mode
 
+	def test_action_determine_dict(self):
+		determinedict = action_based_on_mode(1)
+		self.assertEqual(determinedict, state_capital) #does this have to be what is returned or what the returned thing equals?
+		determinedict = action_based_on_mode(2)
+		self.assertEqual(determinedict, capital_state)
 # def question_to_answer_dict(mode):
 # 	state_capital = {}
 # 	capital_state = {}
@@ -28,6 +36,13 @@ class Actiontest(unittest.TestCase):
 #	 	q_a_dict = capital_state
 #	 return q_a_dict
 
+	def test_action_determine_mode(self):
+		determinemode = action_based_on_user_input("guess capital" or "capital")
+		self.assertEqual(determinemode, 1)
+		determinemode = action_based_on_user_input("guess state" or "state")
+		self.assertEqual(determinemode, 2)
+		determinemode = action_based_on_user_input("mix it up" or "mix")
+		self.assertEqual(determinemode, 1 or 2)
 # def compute_mode():
 # 	#print sys.argv gives ['scrabble.py', '<whatever I typed after command in terminal>']
 # 	mode_str = sys.argv[1].lower()
@@ -48,6 +63,13 @@ class Actiontest(unittest.TestCase):
 # 		break	
 # 	return mode
 
+	def test_action_repeat(self):
+		determinerepeat = action_based_on_user_input("repeat") #does this need to be unique? (see last fcn)
+		self.assertEqual(determinerepeat, "repeat")
+		determinerepeat = action_based_on_user_input("cover it all")
+		self.assertEqual(determinerepeat, "cover it all")
+		determinerepeat = action_based_on_user_input() #how do I check "else" or do I just check the second time it runs when people type the right thing
+		self.assertEqual(determinerepeat, "Please type or 'repeat' or 'cover it all' after question type to start")
 # def compute_repeat_questions():
 # 	repeat_questions = sys.argv[2].lower()
 # 	if repeat_questions == "repeat":
@@ -57,7 +79,7 @@ class Actiontest(unittest.TestCase):
 # 		repeat_questions = "cover it all"
 # 		#repeat_questions(, repeat_questions) #<--what there
 # 	else:
-# 		print "Please type or 'repeat' or 'cover it all' after question type to start"
+# 		print "Please type or 'repeat' or 'cover it all' after question type to start" <--maybe return answer in fcn but actually print in game fcn
 # 	return repeat_questions
 
 # def asks_user_question(mode, key):
@@ -67,7 +89,7 @@ class Actiontest(unittest.TestCase):
 # 		user_answer = raw_input("What state has the capital %s?" % key).lower() 
 # 	return user_answer
 
-class Actiontest(unittest.TestCase):
+
 	def test_action_turns(self):
 		keepgoing = action_based_on_current_turn(turns-3 and >1)
 		self.assertEqual(keepgoing, "Almost to your rounds goal! Finallll pushhhh!")
@@ -78,15 +100,11 @@ class Actiontest(unittest.TestCase):
 		keepgoing = action_based_on_current_turn(60)
 		self.assertEqual(keepgoing, "Really, you should stop.  It's bedtime. Type 'quit' anytime to exit. Or continue, because you really really want to learn these state capitals.")
 
-class Actiontest(unittest.TestCase):
 	def test_action_percent(self):
 		yousuck = action_based_on_percent(30)
 		self.assertEqual(yousuck, "Keep trying! You'll get it!")
 		yourock = action_based_on_percent(60)
 		self.assertEqual(yousuck, "You're doing awesomely! Are you *sure* you weren't on Quiz Bowl in highschool?")
-
-
-
 
 if __name__ == '__main__':
 	unittest.main()
