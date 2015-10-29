@@ -1,4 +1,5 @@
 import random
+from enum import Enum
 
 class GameState:
 	def __init__(self, mode, repeat):
@@ -6,6 +7,11 @@ class GameState:
 		self.repeat = repeat
 
 	def get_mode(self):
-		if self.mode == 2:
-			return int((random.random)*2)
+		if self.mode == Mode.random:
+			return (random.choice([Mode.state, Mode.capital])
 		return self.mode
+
+class Mode(Enum):
+	state = 0
+	capital = 1
+	random = 2
