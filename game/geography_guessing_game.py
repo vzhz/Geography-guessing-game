@@ -1,3 +1,4 @@
+from __future__ import division
 import random
 import unittest
 import sys
@@ -8,31 +9,14 @@ def fancy_print(string, i=1):
     print string
     print "\n"*i #use fancy_print instead of print
 
-def question_to_answer_dict():
+def question_to_answer_set():
 	state_capital_pairs = Set()
 	with open('state_capitals.txt', 'r').read().splitlines() as f:
 		for line in f:
-			state_capital_pairs.add = line.split(',')
+			state, capital = line.split(',')
+			state_capital_pairs.add((state, capital)) #is a set
+	return state_capital_pairs
 
-# def compute_mode():
-# 	#print sys.argv gives ['scrabble.py', '<whatever I typed after command in terminal>']
-# 	mode_str = sys.argv[1].lower()
-# 	while True:
-# 		if mode_str == "guess capital" or mode_str == "capital":
-# 			mode = 1
-# 		elif mode_str == "guess state" or mode_str == "state":
-# 			mode = 2
-# 		elif mode_str == "mix it up!" or mode_str == "mix it up" or mode_str == "mix": 
-# 			mode = random.choice([1, 2]
-# 		#ask zulip folks if they know how to make !!! not matter, accept more variations
-# 			#mode(state_capital, mode) #how to make random back and forth maybe start with random number and 
-# 		#Should the game tell you "This is a state, give me the capital" in that case? Or should the player have to figure that out themself too?
-# 		#figure out what should replace "state_capital" in line 19
-# 		else:
-# 			mode_str = raw_input("Please type or 'guess capital', 'guess state', or 'mix it up!' after name of program to start")
-# 			continue
-# 		break	
-# 	return mode
 def ask_mode():
 	while True:
 		user_input = (raw_input("Type 'guess capital' if you want to guess capitals given states, \n \
@@ -57,46 +41,49 @@ def ask_repeat_questions():
 			return False
 		print "Invalid input, you bumble."
 
-def asks_user_question(mode, key):
-	if mode == 1:  
+def ask_turns_goal():
+	turns_goal = int(raw_input("How many rounds would you like to play? (We'll remind you when you're getting close!)")) 
+	fancy_print("%d is a great number of rounds! Go you!" % turns_goal)
+	return turns_goal
+
+def asks_user_question(game, key): #could put asking and checking into same function
+	
+	if game.get_mode() == Mode.capital:  
 		user_answer = raw_input("What is the capital of %s?" % key).lower()
-	if mode == 2:  
+	if game.get_mode() == Mode.state:  
 		user_answer = raw_input("What state has the capital %s?" % key).lower() 
 	return user_answer
 
-def action_based_on_turns(turns, count): 
-	if count == turns-3 and count > 1:
+def action_based_on_turns(game): 
+	if game.current_turn == game.turns_goal-3 and game.current_turn > 1:
 	  	return "Almost to your rounds goal! Finallll pushhhh!"
-	if count == turns+1:
+	if game.current_turn == game.turn_goal+1:
 	  	return "Would you like to continue? Practice makes perfect! Type 'quit' if you ever want to exit."
-	if count == 10 or count == 20:
+	if game.current_turn == 10 or game.current_turn == 20:
 	  	return "You're doing a great job, keep going!"
-	if count == 60:
-		return "Really, you should stop.  It's bedtime. Type 'quit' anytime to exit. Or continue, because you really really want to learn these state capitals."
+	if game.current_turn == 60:
+		return "Really, you should stop.  It's bedtime. Type 'quit' anytime to exit. Or continue, because you \
+		really really want to learn these state capitals."
 
-def action_based_on_precent(percent):
+def action_based_on_precent(game):
+	percent = game.get.percent()
 	if percent <= 30:
-		return "Keep trying! You'll get it!" #use return so you can run unit tests
+		return "Keep trying! You'll get it!"
 	if percent >= 60:
 		return "You're doing awesomely! Are you *sure* you weren't on Quiz Bowl in highschool?"
 
-def game(q_a_dict, mode, repeat_questions): 
-	remaining_questions = list(range(1,51))
-	points = 0
-	count = 1.0 #float
-	keys = q_a_dict.keys()
-	mode = int(raw_input("")) # should I call this "order"?
-	repeat = int(raw_input("")) # still best as boolean?
-	turns = int(raw_input("How many rounds would you like to play? (We'll remind you when you're getting close!)")) 
-	fancy_print("%d is a great number of rounds! Go you!" % turns)
+def run():
+	questions = question_to_answer_set()
+	mode = ask_mode()
+	repeat = ask_repeat_questions()
+	turns_goal = ask_turns_goal()
+	game = Game(questions, mode, repeat, turns_goal)
+	
 	while True:
-		if action_based_on_turns(turns, count): #note: None evaluates to False
-			fancy_print(action_based_on_turns(turns, count))	
-		fancy_print("This is turn number %d. Good luck!" % count)
-		if repeat_questions == 'repeat':
-			line_number = int(round(random.uniform(1,50))) #TODO len(question_to_answer_dict) not 50, check random
-		if repeat_questions == 'cover it all':
-			line_number = int(random.choice(remaining_questions)) 
+		turn_action = action_based_on_turns(game)
+		if turn_action: #note: None evaluates to False
+			fancy_print(turn_action)	
+		fancy_print("This is turn number %d. Good luck!" % game.current_turn)
 		
 		key = keys[line_number]
 		value = q_a_dict[key]

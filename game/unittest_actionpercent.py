@@ -3,15 +3,15 @@ import unittest
 class Actiontest(unittest.TestCase):
 	def test_action_blank_lines(self):
 		blanklines = action_based_on_fancy_print() #how do I write a unit test for presence/absence of command
-		self.assertEqual(blanklines, "\n"*i)
-#def fancy_print(string, i=1): 						
+		self.assertEqual(blanklines, "\n"*blanklines) #maybe it doesn't need a test? how do you know?
+#def fancy_print(string, i=1): 	#i is defined in the () for the first time	that makes sense!				
 #    # Prints out a string with i newlines after it
 #    print string
 #    print "\n"*i #use fancy_print instead of print
 
 	def test_action_random(self):
 		random12 = random_action_1_2() #since it is just being called and not given an input is there anything to test?
-		self.assertEqual(random12, 1 or 2)
+		self.assertIn(random12, (1, 2))
 #def choose_order_in_case_of_placeholder():
 #	mode = random.choice([1, 2])
 #	return mode
@@ -91,7 +91,7 @@ class Actiontest(unittest.TestCase):
 
 
 	def test_action_turns(self):
-		keepgoing = action_based_on_current_turn(turns-3 and >1)
+		keepgoing = action_based_on_current_turn(turns-3)
 		self.assertEqual(keepgoing, "Almost to your rounds goal! Finallll pushhhh!")
 		keepgoing = action_based_on_current_turn(turns+1)
 		self.assertEqual(keepgoing, "Would you like to continue? Practice makes perfect! Type 'quit' if you ever want to exit.")
