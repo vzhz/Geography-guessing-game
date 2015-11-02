@@ -1,6 +1,6 @@
 from __future__ import division
 import random
-from enum import Enum
+#from enum import Enum #but the docs say... https://docs.python.org/3/library/enum.html#enum.Enum
 
 
 class GameState:
@@ -14,26 +14,23 @@ class GameState:
 		self.right = 0
 		self.wrong = 0
 
-
 	def update_mode(self):
-		if self.random == Mode.random:
-			self.mode = random.choice([Mode.state, Mode.capital]
+		if self.random:
+			self.mode = random.choice([Mode.state, Mode.capital])
 
 	def get_state_capital_pair(self):
-		question = self.questions.pop()
-		if self.repeat: #T or F
-			self.questions.add(question)
+		index = random.randint(0,len(self.questions))
+		question = self.questions[index]
+		if not self.repeat: #T or F
+			self.questions = self.questions[:index] + self.questions[index+1:]
 		return question #can say get q, get answer because it knows what mode is (another option)
 
 	def compute_percent(self):
 		if self.right + self.wrong == 0:
 			return 0
-		return (self.right//(self.right+self.wrong))*100
+		return (self.right/(self.right+self.wrong))*100
 
-
-
-
-class Mode(Enum):
+class Mode(): #was Enum
 	state = 0
 	capital = 1
 	random = 2
