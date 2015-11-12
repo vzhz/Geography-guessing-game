@@ -19,7 +19,7 @@ class GameState:
 			self.mode = random.choice([Mode.state, Mode.capital])
 
 	def get_state_capital_pair(self):
-		index = random.randint(0,len(self.questions))
+		index = random.randint(0,len(self.questions)-1)
 		question = self.questions[index]
 		if not self.repeat: #T or F
 			self.questions = self.questions[:index] + self.questions[index+1:]

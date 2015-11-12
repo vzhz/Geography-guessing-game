@@ -1,6 +1,7 @@
 from __future__ import division
 import random
 import unittest
+from difflib import SequenceMatcher
 import sys
 from gamestate import GameState, Mode
 
@@ -23,38 +24,38 @@ def ask_mode():
 	while True:
 		user_input = (raw_input("Type 'guess capital' if you want to guess capitals given states, \n \
 			'guess state' if you want to guess states given capitals, \n \
-			and 'random' if you want a mix of both!")).lower()
+			and 'random' if you want a mix of both! \n")).lower()
 		if user_input == "guess capital":
 			return Mode.capital
 		if user_input == "guess state":
 			return Mode.state
 		if user_input == "random":
 			return Mode.random
-		print "Learn to type, punk."
+		print "Learn to type, punk. \n"
+
+def ask_turns_goal():
+	while True:
+		turns_goal = int(raw_input("How many turns would you like to do today? \n")) 
+		fancy_print("%d is a great number of rounds! Go you! \n" % turns_goal) 
+		return turns_goal
 
 def ask_repeat_questions():
 	while True:
-		user_input = (raw_input("Type 'repeat' and enter if you want to see state/capital pairs more than once \
-			and just enter if you do not want pairs to repeat.")).lower()
-		if user_input == "repeat":
-			return True
-		if user_input == "":
-			return False
-		print "Invalid input, you bumble."
-
-def ask_turns_goal():
-	turns_goal = int(raw_input("How many rounds would you like to play? (We'll remind you when you're getting close!)")) 
-	fancy_print("%d is a great number of rounds! Go you!" % turns_goal)
-	return turns_goal
+		repeat_questions = (raw_input("Type 'repeat' and enter if you want to see state/capital pairs more than \n \
+			once, and enter if want to see state/capital pairs only once \n")) 
+		return repeat_questions
 
 def asks_user_question(game): #could put asking and checking into same function
 	(state, capital) = game.get_state_capital_pair()
-	if game.mode == Mode.capital:  
-		user_answer = raw_input("What is the capital of %s?" % state).lower()
-		return user_answer, capital
-	if game.mode == Mode.state:  
-		user_answer = raw_input("What state has the capital %s?" % capital).lower() 
-		return user_answer, state
+	if len(game.get_state_capital_pair()) > 0:
+		if game.mode == Mode.capital:  
+			user_answer = raw_input("What is the capital of %s? \n" % state).lower() 
+			return user_answer, capital
+		if game.mode == Mode.state:  
+			user_answer = raw_input("What state has the capital %s? \n" % capital).lower()
+			return user_answer, state
+	else:
+		pass
 
 def action_based_on_turns(game): 
 	if game.current_turn == game.turns_goal-3 and game.current_turn > 1:
@@ -113,5 +114,6 @@ def run():
 		action_based_on_precent(game)
 		
 if __name__ == '__main__': # do all the stuff that should happen when this runs
-	fancy_print("Welcome to Geography Guess-er-roo-y-time!")
+	print " "
+	fancy_print("Welcome to Geography Guessing Game!")
 	run()
