@@ -28,8 +28,9 @@ class GameState:
 			self.questions = self.questions[:index] + self.questions[index+1:]
 		return question #can say get q, get answer because it knows what mode is (another option)
 
-	def print_2(self):
-		print 2
+# use for testing
+#	def print_2(self):
+#		print 2
 
 	def compute_percent_correct(self):
 		if self.right + self.wrong == 0:

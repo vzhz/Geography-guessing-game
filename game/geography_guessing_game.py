@@ -5,7 +5,6 @@ from difflib import SequenceMatcher
 import sys
 from gamestate import GameState, Mode
 from game_helper_functions import *
-import pickle 
 
 def run():
 	questions = state_capital_pairs()
@@ -13,10 +12,12 @@ def run():
 	repeat = ask_repeat_questions()
 	turns_goal = ask_turns_goal()
 	game = GameState(questions, mode, repeat, turns_goal)
-	
+
+	time_start = time.time() #returns floating point number
 	while True:
 		game.update_mode()
 		game.current_turn += 1
+		make_scoreboard()
 		turn_action = action_based_on_turns(game)
 		if turn_action: #note: None evaluates to False
 			fancy_print(turn_action)	
@@ -29,7 +30,7 @@ def run():
 			while True:	
 				if user_wants_to_stay == "Y" or user_wants_to_stay == "y":
 					fancy_print("Ok, hope to see you soon!")
-					game_summary()
+					end_game()
 					exit(0)
 				if user_wants_to_stay == "N" or user_wants_to_stay == "n":
 					fancy_print("Great! Let's do some more!")
@@ -56,7 +57,7 @@ def run():
 			game.wrong += 1
 			game.so_wrong_spell += 1
 			fancy_print("Wrong! The correct answer is %s! Still %d points, now %d percent correct!" %(true_answer, game.right, game.compute_percent_correct()))
-		action_based_on_precent(game)
+		action_based_on_percent(game)
 
 		
 		
