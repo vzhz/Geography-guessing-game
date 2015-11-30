@@ -13,6 +13,9 @@ class GameState:
 		self.current_turn = 0
 		self.right = 0
 		self.wrong = 0
+		self.so_wrong_spell = 0
+		self.little_wrong_spell = 0
+		self.correct_spell = 0
 
 	def update_mode(self):
 		if self.random:
@@ -25,10 +28,23 @@ class GameState:
 			self.questions = self.questions[:index] + self.questions[index+1:]
 		return question #can say get q, get answer because it knows what mode is (another option)
 
-	def compute_percent(self):
+	def print_2(self):
+		print 2
+
+	def compute_percent_correct(self):
 		if self.right + self.wrong == 0:
 			return 0
 		return (self.right/(self.right+self.wrong))*100
+
+	def compute_percent_spelled_correct(self):
+		return (self.correct_spell/(self.little_wrong_spell+self.so_wrong_spell+self.correct_spell))*100
+
+	def compute_percent_spelled_almost_correct(self):
+		return (self.little_wrong_spell/(self.little_wrong_spell+self.so_wrong_spell+self.correct_spell))*100
+
+	def compute_percent_spelled_very_wrong(self):
+		return (self.so_wrong_spell/(self.little_wrong_spell+self.so_wrong_spell+self.correct_spell))*100
+
 
 class Mode(): #was Enum
 	state = 0

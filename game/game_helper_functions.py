@@ -4,6 +4,7 @@ import unittest
 from difflib import SequenceMatcher
 import sys
 from gamestate import GameState, Mode
+import pickle
 
 def fancy_print(string, i=1): 						
     # Prints out a string with i newlines after it
@@ -69,8 +70,34 @@ def action_based_on_turns(game):
 		really really want to learn these state capitals."
 
 def action_based_on_precent(game):
-	percent = game.compute_percent()
+	game.print_2()
+	percent = game.compute_percent_correct()
 	if percent <= 30:
 		fancy_print("Keep trying! You'll get it!")
 	if percent >= 60:
 		fancy_print("You're doing awesomely! Are you *sure* you weren't on Quiz Bowl in highschool?")
+
+###end game
+def scoreboard():
+	#via http://stackoverflow.com/questions/16726354/saving-the-highscore-for-a-python-game
+	#load old scores if there are any
+	try:
+		with open('score.dat', 'rb') as file:
+			score = pickle.load(file)
+	except:
+		game.right = 0
+	print "Your best score: %d" %(game.right) #where should this go? start of game? in gamestate? 
+	#game is played 
+	#save the score
+	with open('score.dat', 'wb') as file:
+		pickle.dump(score, file)
+
+def game_summary():
+	threshold_need_to_memorize = 60 #should I ask user how mean we should be re: spelling before we decide they weren't spelling the right word at all? maybe we should have difficulty levels
+	score() 
+	print "Total points: %d" %(game.right)
+	print "Percent correct: %d" %(game.compute_percent())
+	print "Percent spelled correct: %d" %(game.compute_percent_spelled_correct())
+	print "Percent spelled almost correct: %d" %(compute_percent_spelled_almost_correct())
+	if (game.compute_percent_spelled_correct() + compute_percent_spelled_almost_correct()) < threshold_percent_need_to_memorize:
+		print "You spelled %d very wrong, so I expect you were typing entirely wrong answers. Better hit the flashcards again!" %(compute_percent_spelled_very_wrong)

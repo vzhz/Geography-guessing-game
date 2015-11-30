@@ -4,76 +4,8 @@ import unittest
 from difflib import SequenceMatcher
 import sys
 from gamestate import GameState, Mode
-
-def fancy_print(string, i=1): 						
-    # Prints out a string with i newlines after it
-    print string
-    print "\n"*i #use fancy_print instead of print
-
-def state_capital_pairs():
-	state_capital_pairs = []
-	with open('state_capitals.txt', 'r') as f:
-		splitlines = f.read().splitlines()
-		for line in splitlines:
-			state, capital = line.split(',')
-			state_capital_pairs.append((state, capital))
-	return state_capital_pairs
-	# later, list comp
-
-def ask_mode():
-	while True:
-		user_input = (raw_input("Type 'guess capital' if you want to guess capitals given states, \n \
-			'guess state' if you want to guess states given capitals, \n \
-			and 'random' if you want a mix of both! \n")).lower()
-		if user_input == "guess capital":
-			return Mode.capital
-		if user_input == "guess state":
-			return Mode.state
-		if user_input == "random":
-			return Mode.random
-		print "Learn to type, punk. \n"
-
-def ask_turns_goal():
-	while True:
-		turns_goal = int(raw_input("How many turns would you like to do today? \n")) 
-		fancy_print("%d is a great number of rounds! Go you! \n" % turns_goal) 
-		return turns_goal
-
-def ask_repeat_questions():
-	while True:
-		repeat_questions = (raw_input("Type 'repeat' and enter if you want to see state/capital pairs more than \n \
-			once, and enter if want to see state/capital pairs only once \n")) 
-		return repeat_questions
-
-def asks_user_question(game): #could put asking and checking into same function
-	(state, capital) = game.get_state_capital_pair()
-	if len(game.get_state_capital_pair()) > 0:
-		if game.mode == Mode.capital:  
-			user_answer = raw_input("What is the capital of %s? \n" % state) 
-			return user_answer, capital
-		if game.mode == Mode.state:  
-			user_answer = raw_input("What state has the capital %s? \n" % capital)
-			return user_answer, state
-	else:
-		pass
-
-def action_based_on_turns(game): 
-	if game.current_turn == game.turns_goal-3 and game.current_turn > 1:
-	  	return "Almost to your rounds goal! Finallll pushhhh!"
-	if game.current_turn == game.turns_goal+1:
-	  	return "Would you like to continue? Practice makes perfect! Type 'quit' if you ever want to exit."
-	if game.current_turn == 10 or game.current_turn == 20:
-	  	return "You're doing a great job, keep going!"
-	if game.current_turn == 60:
-		return "Really, you should stop.  It's bedtime. Type 'quit' anytime to exit. Or continue, because you \
-		really really want to learn these state capitals."
-
-def action_based_on_precent(game):
-	percent = game.compute_percent()
-	if percent <= 30:
-		fancy_print("Keep trying! You'll get it!")
-	if percent >= 60:
-		fancy_print("You're doing awesomely! Are you *sure* you weren't on Quiz Bowl in highschool?")
+from game_helper_functions import *
+import pickle 
 
 def run():
 	questions = state_capital_pairs()
@@ -97,6 +29,7 @@ def run():
 			while True:	
 				if user_wants_to_stay == "Y" or user_wants_to_stay == "y":
 					fancy_print("Ok, hope to see you soon!")
+					game_summary()
 					exit(0)
 				if user_wants_to_stay == "N" or user_wants_to_stay == "n":
 					fancy_print("Great! Let's do some more!")
@@ -106,6 +39,8 @@ def run():
 			continue
 		#maybe test user answer fcn
 		#if user_answer == true_answer.lower():
+		min_spelling_ratio = 0.75 #later allow user to pass it in, so they can decide how correct counts
+		#maybe I should have difficulty levels that have defaults of harder min_spelling_ratios, etc. and user choses their level
 		how_correct_spell = SequenceMatcher(None, true_answer.lower(), user_answer.lower())
 		spelling_ratio = how_correct_spell.ratio()
 		if spelling_ratio >= min_spelling_ratio:
@@ -116,12 +51,14 @@ def run():
 			else:
 				game.little_wrong_spell += 1
 				print ("Your spelling is so close! We'll call it good!")
-			fancy_print("Yay, you got points! Now at %d points with %d percent correct!" %(game.right, game.compute_percent()))
+			fancy_print("Yay, you got points! Now at %d points with %d percent correct!" %(game.right, game.compute_percent_correct()))
 		else:
 			game.wrong += 1
 			game.so_wrong_spell += 1
-			fancy_print("Wrong! The correct answer is %s! Still %d points, now %d percent correct!" %(true_answer, game.right, game.compute_percent()))
+			fancy_print("Wrong! The correct answer is %s! Still %d points, now %d percent correct!" %(true_answer, game.right, game.compute_percent_correct()))
 		action_based_on_precent(game)
+
+		
 		
 if __name__ == '__main__': # do all the stuff that should happen when this runs
 	print " "
