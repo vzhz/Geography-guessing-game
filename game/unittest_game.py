@@ -2,22 +2,28 @@ import unittest
 import geography_guessing_game.py
 import game_helper_functions.py
 
+class TddForGeographyGame(unittest.TestCase):
+	def test_return_state_capital_pairs(self):
+		
 #logic, dependant on other parts of program
 
-def fancy_print(string, i=1): 						
-    # Prints out a string with i newlines after it
-    print string
-    print "\n"*i #use fancy_print instead of print
+# def fancy_print(string, i=1): 						
+#     # Prints out a string with i newlines after it
+#     print string
+#     print "\n"*i #use fancy_print instead of print
+# NO TEST FOR THIS
 
-def state_capital_pairs():
-	state_capital_pairs = []
-	with open('state_capitals.txt', 'r') as f:
-		splitlines = f.read().splitlines()
-		for line in splitlines:
-			state, capital = line.split(',')
-			state_capital_pairs.append((state, capital))
-	return state_capital_pairs
-	# later, list comp
+
+# def state_capital_pairs():
+# 	state_capital_pairs = []
+# 	with open('state_capitals.txt', 'r') as f:
+# 		splitlines = f.read().splitlines()
+# 		for line in splitlines:
+# 			state, capital = line.split(',')
+# 			state_capital_pairs.append((state, capital))
+# 	return state_capital_pairs
+# 	# later, list comp
+
 
 def ask_mode():
 	while True:

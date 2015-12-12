@@ -50,7 +50,7 @@ def ruby_autorun(filenames, runner=None, message=None):
     one set of unit tests for all of the files instead, like
     runner='ruby mytests.rb'. Or even run something other than Ruby if
     you're perverse enough."""
-    if runner is None: runner = 'python unittest_game.py'
+    if runner is None: runner = 'python unittest_game.py' #should this be the game or helper function file?
     for filename, event in FileWatcher(filenames): #can it wait for an event like a save or just for a change
         if message: print message
         if event != 'deleted' or '%s' not in runner:

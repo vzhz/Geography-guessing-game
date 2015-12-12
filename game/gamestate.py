@@ -4,7 +4,7 @@ import random
 
 
 class GameState:
-    def __init__(self, questions, mode, repeat, turns_goal):
+    def __init__(self, questions, mode, turns_goal):#removed repeat
         self.questions = questions
         self.mode = mode #guess state whole round, guess capital whole round, guess mix
         self.random = random
@@ -24,8 +24,8 @@ class GameState:
     def get_state_capital_pair(self):
         index = random.randint(0,len(self.questions)-1)
         question = self.questions[index]
-        if not self.repeat: #T or F
-            self.questions = self.questions[:index] + self.questions[index+1:]
+        #if not self.repeat: #T or F
+        #    self.questions = self.questions[:index] + self.questions[index+1:]
         return question #can say get q, get answer because it knows what mode is (another option)
 
 # use for testing

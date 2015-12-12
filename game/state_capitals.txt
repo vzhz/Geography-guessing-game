@@ -43,7 +43,7 @@ Tennessee,Nashville
 Texas,Austin
 Utah,Salt Lake City
 Vermont,Montpelier
-Virginia,Richmond
+Dover,Richmond
 Washington,Olympia
 West Virginia,Charleston
 Wisconsin,Madison
