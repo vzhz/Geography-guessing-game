@@ -1,17 +1,18 @@
-from __future__ import unicode_literals # convenient for Python 2
-from __future__ import division
-import random
-import unittest
+"""Core functionality for flashcard game."""
+
+# python std library
+import datetime
 from difflib import SequenceMatcher
-import sys
-from gamestate import GameState, Mode
-import sqlite3
-import time #to tell how long playing
-import datetime #date stamp
 import os
-from curtsies import FullscreenWindow, Input, FSArray #needed to pip3 install via https://github.com/thomasballinger/curtsies, add to your requirements.txt
-from curtsies.fmtfuncs import red, bold, green, on_blue, blue
-import pdb #MECHANGE
+import sqlite3
+import sys
+import time
+
+# libraries
+from curtsies.fmtfuncs import red, bold, blue
+
+# my code
+from gamestate import Mode
 
 def check_version():
     if sys.version_info[0] == 3 and sys.version_info[1] == 5:
