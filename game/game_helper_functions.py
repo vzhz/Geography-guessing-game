@@ -52,6 +52,11 @@ def state_capital_pairs():
 
 
 def ask_mode():
+    """Asks user if s/he would like to respond with the first or second element of the pair
+       when given the other."""
+
+    #FIXME: Gives 3rd option when 1st option is requested.
+
     while True:
         user_input = input(
             "\nWould you like to guess capitals given states or vice versa?"
@@ -60,15 +65,18 @@ def ask_mode():
             "\n  2: If you want to guess states given capitals."
             "\n  3: If you want a mix of both!"
             "\n"
-            "\ntype your choice [1,2,3]: "
+            "\nType your choice [1,2,3]: "
         ).lower()
+
         if user_input == "1":
             return Mode.capital
         if user_input == "2":
             return Mode.state
         if user_input == "3":
             return Mode.random
-        print("Learn to type, punk. \n")
+
+        print("Learn to type, punk.\n")
+
 
 def ask_turns_goal():
     while True:
