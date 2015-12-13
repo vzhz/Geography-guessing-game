@@ -30,9 +30,9 @@ def check_version():
             exit()
 
 def fancy_print(string, i=1):
-    # Prints out a string with i newlines after it
-    print(string)
-    print("\n"*i) #use fancy_print instead of print
+    """Adds i extra lines after printed message."""
+
+    print(string + "\n" * i)
 
 def state_capital_pairs():
     state_capital_pairs = []
