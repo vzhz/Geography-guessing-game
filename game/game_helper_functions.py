@@ -14,6 +14,8 @@ from curtsies.fmtfuncs import red, bold, blue
 # my code
 from gamestate import Mode
 
+
+
 def check_version():
     """Tests if Python version is 3.5.x and print user instructions if it is not."""
 
@@ -29,20 +31,25 @@ def check_version():
             print(bold("Remember to type 'Python3'"))
             exit()
 
+
 def fancy_print(string, i=1):
     """Adds i extra lines after printed message."""
 
     print(string + "\n" * i)
 
+
 def state_capital_pairs():
-    state_capital_pairs = []
-    with open('state_capitals.txt', 'r') as f: #make generic
-        splitlines = f.read().splitlines()
-        for line in splitlines:
-            state, capital = line.split(',')
-            state_capital_pairs.append((state, capital))
-    return state_capital_pairs
-    # later, list comp
+    """Reads flashcard text file and assigns the pairs to list"""
+
+    # FIXME: use a dictionary for constant time lookups.
+    pairs = []
+
+    with open('state_capitals.txt', 'r') as f:
+        for line in f.read().splitlines():
+            pairs.append(tuple(line.split(',')))
+
+    return pairs
+
 
 def ask_mode():
     while True:
