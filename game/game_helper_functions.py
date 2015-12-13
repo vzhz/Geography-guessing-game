@@ -79,16 +79,11 @@ def ask_mode():
 
 
 def ask_turns_goal():
-    while True:
-        turns_goal = int(input("How many turns would you like to do today? \n"))
-        fancy_print(blue("%d is a great number of rounds! Go you! \n" % turns_goal))
-        return turns_goal
+    """Asks user how many turns they plan to do."""
 
-# def ask_repeat_questions():
-#   while True:
-#       repeat_questions = (input("Type 'repeat' and enter if you want to see state/capital pairs more than \n \
-#           once, and enter if want to see state/capital pairs only once \n"))
-#       return repeat_questions
+    turns_goal = int(input("How many turns would you like to do today? \n"))
+    return turns_goal
+
 
 def asks_user_question(game): #could put asking and checking into same function
     (state, capital) = game.get_state_capital_pair()
