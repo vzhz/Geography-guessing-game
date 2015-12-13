@@ -15,12 +15,17 @@ from curtsies.fmtfuncs import red, bold, blue
 from gamestate import Mode
 
 def check_version():
-    if sys.version_info[0] == 3 and sys.version_info[1] == 5:
-        pass
-    else:
-        print(red("hey asshole, did you even read the README? You're using the wrong Python version and are going to be very sad when I don't save your score."))
-        get_correct_python = input("Would you like to leave and restart after opening with the correct version? (y,n)")
-        if get_correct_python.lower() == "y" or get_correct_python.lower() == "yes":
+    """Tests if Python version is 3.5.x and print user instructions if it is not."""
+
+    message = (
+        "Hey asshole, did you even read the README? You're using the wrong Python "
+        "version and are going to be very sad when I don't save your score."
+    )
+    prompt = "Would you like to leave and restart after opening with the correct version [y,n]?:"
+
+    if not (sys.version_info[0] == 3 and sys.version_info[1] == 5):
+        print(red(message))
+        if input(prompt).lower() in ["y", "yes"]:
             print(bold("Remember to type 'Python3'"))
             exit()
 
