@@ -111,17 +111,18 @@ def ask_turns_goal():
     return turns_goal
 
 
-def asks_user_question(game): #could put asking and checking into same function
-    (state, capital) = game.get_state_capital_pair()
-    if len(game.get_state_capital_pair()) > 0:
-        if game.mode == Mode.capital:
-            user_answer = input("What is the capital of %s? \n" % state) #have user add input when they load a new file
-            return user_answer, capital
-        if game.mode == Mode.state:
-            user_answer = input("What state has the capital %s? \n" % capital) #same as above
-            return user_answer, state
-    else:
-        pass
+def asks_user_question(game):
+    """Gives user one side of the pair and asks them to type other side of the pair."""
+
+    state, capital = game.get_state_capital_pair()
+
+    if game.mode == Mode.capital:
+        user_answer = input("What is the capital of %s? " % state)
+        return user_answer, capital
+    elif game.mode == Mode.state:
+        user_answer = input("What state has the capital %s? " % capital)
+        return user_answer, state
+
 
 def action_based_on_turns(game):
     if game.current_turn == game.turns_goal-game.turns_goal / 10 and game.current_turn > 1:

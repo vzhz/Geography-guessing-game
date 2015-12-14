@@ -8,6 +8,7 @@ class GameState:
         self.QuestionFile = questionfile
         self.questions = questions
         self.mode = mode #guess state whole round, guess capital whole round, guess mix
+        assert(mode in (Mode.state, Mode.capital))
         self.random = random
         #self.repeat = repeat #get same question more than once in game
         self.turns_goal = turns_goal
