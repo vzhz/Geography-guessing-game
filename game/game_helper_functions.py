@@ -41,13 +41,39 @@ def fancy_print(string, i=1):
 def state_capital_pairs():
     """Reads flashcard text file and assigns the pairs to list"""
 
+    user_file_name = input(
+        "\nWhat flashcards would you like to practice today?"
+        "\n"
+        "\n  1: If you want to learn US state capitals."
+        "\n  2: If you want to learn a few words in French."
+        "\n  3: If you want to learn metric/SI conversions."
+        "\n  4: If you want to learn a few multiplication tables."
+        "\n  5: If want to load your own file."
+        "\n"
+        "\nType your choice [1,2,3,4,5]: "
+        ).lower()
+
+        if user_input == "1":
+            return QuestionFile.us_state_capital
+        if user_input == "2":
+            return QuestionFile.french_food
+        if user_input == "3":
+            return QuestionFile.metric
+        if user_input == "4":
+            return QuestionFile.multiplication
+        if user_input == "5":
+            return QuestionFile.user
+
+        print("Learn to type, punk.\n")
+
     # FIXME: use a dictionary for constant time lookups.
     pairs = []
 
-    with open('state_capitals.txt', 'r') as f:
+    with open(user_file_name, 'r') as f:
         for line in f.read().splitlines():
             pairs.append(tuple(line.split(',')))
-
+    print(pairs)
+    print(len(pairs))
     return pairs
 
 

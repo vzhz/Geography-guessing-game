@@ -5,6 +5,7 @@ import random
 
 class GameState:
     def __init__(self, questions, mode, turns_goal):#removed repeat
+        self.QuestionFile = questionfile
         self.questions = questions
         self.mode = mode #guess state whole round, guess capital whole round, guess mix
         self.random = random
@@ -51,3 +52,10 @@ class Mode(): #was Enum
     state = 0
     capital = 1
     random = 2
+
+class QuestionFile():
+    us_state_capital = 0
+    french_food = 1
+    metric = 2
+    multiplication = 3
+    user = 4
