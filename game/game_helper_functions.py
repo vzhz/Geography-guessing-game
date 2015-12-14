@@ -53,18 +53,18 @@ def state_capital_pairs():
         "\nType your choice [1,2,3,4,5]: "
         ).lower()
 
-        if user_input == "1":
-            return QuestionFile.us_state_capital
-        if user_input == "2":
-            return QuestionFile.french_food
-        if user_input == "3":
-            return QuestionFile.metric
-        if user_input == "4":
-            return QuestionFile.multiplication
-        if user_input == "5":
-            return QuestionFile.user
+    if user_input == "1":
+        return QuestionFile.us_state_capital
+    if user_input == "2":
+        return QuestionFile.french_food
+    if user_input == "3":
+        return QuestionFile.metric
+    if user_input == "4":
+        return QuestionFile.multiplication
+    if user_input == "5":
+        return QuestionFile.user
 
-        print("Learn to type, punk.\n")
+    print("Learn to type, punk.\n")
 
     # FIXME: use a dictionary for constant time lookups.
     pairs = []
@@ -125,15 +125,30 @@ def asks_user_question(game):
 
 
 def action_based_on_turns(game):
-    if game.current_turn == game.turns_goal-game.turns_goal / 10 and game.current_turn > 1:
-        print(blue("Almost to your rounds goal! Finallll pushhhh!"))#should this be a return statement?
-    if game.current_turn == game.turns_goal+1:
-        print("Would you like to continue? Practice makes perfect! Type 'quit' if you ever want to exit.")
-    if game.current_turn == game.turns_goal/10 or game.current_turn == game.turns_goal / 5:
-        print(blue("You're doing a great job, keep going!"))
-    if game.current_turn == 60:
-        return "Really, you should stop.  It's bedtime. Type 'quit' anytime to exit. Or continue, because you \
-        really really want to learn these state capitals."
+    """Prints message to user based on number of turns the user has completed."""
+
+    def handle_near_to_goal():
+        if game.current_turn == game.turns_goal - game.turns_goal / 10 and game.current_turn > 1:
+            print(blue("Almost to your rounds goal! Finallll pushhhh!"))
+
+    def handle_after_goal():
+        if game.current_turn == game.turns_goal + 1:
+            print("Would you like to continue? Practice makes perfect! Type 'quit' to exit.")
+
+    def handle_encourage_to_goal():
+        if game.current_turn == game.turns_goal / 10 or game.current_turn == game.turns_goal / 5:
+            print(blue("You're doing a great job, keep going!"))
+
+    def handle_too_many_turns():
+        if game.current_turn == 100:
+            print("Really, you should stop.  It's bedtime. Type 'quit' anytime to exit."
+                  "Or continue, because you reeeally want to learn the things (you're awesome!).")
+
+    handle_near_to_goal()
+    handle_after_goal()
+    handle_encourage_to_goal()
+    handle_too_many_turns()
+
 
 def action_based_on_percent(game):
     percent = game.compute_percent_correct()
