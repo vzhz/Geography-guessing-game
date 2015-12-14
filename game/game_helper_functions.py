@@ -151,11 +151,26 @@ def action_based_on_turns(game):
 
 
 def action_based_on_percent(game):
+    """Prints feedback for user based on performance (percent correct)."""
+
+    you_suck_message = [
+        "Keep trying! You'll get it!",
+        "C'on, human.",
+        "Try harder?"
+        ]
+    you_rock_message = [
+        "WAY TO GO!",
+        "You're doing awesomely! Are you *sure* you weren't on Quiz Bowl in highschool?",
+        "WELL DONE!",
+        "Rockin' this!"
+        ]
+
     percent = game.compute_percent_correct()
     if percent <= 30:
-        fancy_print("Keep trying! You'll get it!")
+        fancy_print(random.choice(you_suck_message))
     if percent >= 60:
-        fancy_print(blue("You're doing awesomely! Are you *sure* you weren't on Quiz Bowl in highschool?"))
+        fancy_print(blue(random.choice(you_rock_message)))
+
 
 def check_if_want_quit_game(user_answer, time_start, game):
     if user_answer == "quit" or user_answer == "exit":
