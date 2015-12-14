@@ -173,21 +173,23 @@ def action_based_on_percent(game):
 
 
 def check_if_want_quit_game(user_answer, time_start, game):
-    if user_answer == "quit" or user_answer == "exit":
-        user_wants_to_stay = input("Are you sure you want to leave? (y,n)") #boolean would make sense if were asking Y/N more than once
+    """Encourages the user to continue playing if they ask to exit."""
+
+    prompt = "Are you sure you want to leave? (y,n)"
+
+    if user_answer in ["quit", "exit"]:
         while True:
-            if user_wants_to_stay.lower() == "y" or user_wants_to_stay.lower() == "yes":
+            action = input(prompt).lower()
+            if action in ["y", "yes"]:
                 fancy_print("Ok, hope to see you soon!")
                 end_game(time_start, game)
                 exit(0)
-            if user_wants_to_stay.lower() == "n" or user_wants_to_stay.lower() == "no":
+            if action in ["n", "no"]:
                 fancy_print("Great! Let's do some more!")
                 break
             else:
-                user_wants_to_stay = input("Please choose 'y' to leave or 'n' to stay")
-                continue
-    #maybe test user answer fcn
-    #if user_answer == true_answer.lower():
+                print(red("Invalid input: y or n, please!"))
+
 
 def judge_spelling(true_answer, user_answer, game):
     min_spelling_ratio = 0.75 #later allow user to pass it in, so they can decide how correct counts
