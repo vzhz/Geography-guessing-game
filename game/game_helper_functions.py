@@ -236,13 +236,17 @@ def make_scoreboard():
 
 
 def end_game(time_start, game):
-    time_end = time.time() #end game timer
-    time_of_game_play = (time_end - time_start) #in seconds
+    """Calls functions needed to end the game, stops game timer, and calculates duration of game."""
+
+    time_end = time.time()
+    time_of_game_play = (time_end - time_start)
+
     pretty_time = seconds_to_pretty_time(time_of_game_play)
     update_scoreboard(game, pretty_time)
-    #game_summary(game, pretty_time_of_game_play)  MECHANGE
+
     if game.current_turn > 0:
         game_summary(game, pretty_time)
+
 
 def seconds_to_pretty_time(time_of_game_play):
     #time_of_game_play is in secs
