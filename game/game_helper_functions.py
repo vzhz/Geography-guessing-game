@@ -249,26 +249,30 @@ def end_game(time_start, game):
 
 
 def seconds_to_pretty_time(time_of_game_play):
-    #time_of_game_play is in secs
+    """Converts the calculated game duration from seconds to more easily read units."""
+
     secs = int(time_of_game_play)
-    #print(secs)
     if secs < 60:
-        #print("%d s" %(secs))
         return "%d s" %(secs)
+
     mins = secs / 60
-    secs -= mins * 60 #note: might get diff answer with modulo is using floats but this is an int, yay!
+    secs -= mins * 60 # would get diff answer with modulo b/c floats
     if mins < 60:
-        return "%d h %02d m" %(mins, secs) #pads two digits with zero :00
+        return "%d h %02d m" %(mins, secs) # pads two digits with zero :00
+
     hours = mins / 60
     mins -= hours * 60
     if hours < 24:
         return "%d h %02d m %02d" %(hours, mins, secs)
+
     days = hours / 24
     hours -= days * 24
     return "%d d %02d h %02d m %02d" %(days, hours, mins, secs)
-    #alternatively:
-    #import datetime
-    #str(datetime.timedelta(seconds=666))
+
+    # alternatively:
+    # import datetime
+    # str(datetime.timedelta(seconds=666))
+
 
 def update_scoreboard(game, pretty_time):
     """pretty_time is an output from seconds_to_pretty_time"""
