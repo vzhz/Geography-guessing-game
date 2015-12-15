@@ -1,16 +1,12 @@
-from __future__ import division
 import random
-#from enum import Enum #but the docs say... https://docs.python.org/3/library/enum.html#enum.Enum
-
 
 class GameState:
-    def __init__(self, questions, mode, turns_goal):#removed repeat
+    def __init__(self, questions, mode, turns_goal):
         self.QuestionFile = questionfile
         self.questions = questions
         self.mode = mode #guess state whole round, guess capital whole round, guess mix
-        assert(mode in (Mode.state, Mode.capital))
+        assert(mode in (Mode.first_half_pair, Mode.second_half_pair))
         self.random = random
-        #self.repeat = repeat #get same question more than once in game
         self.turns_goal = turns_goal
         self.current_turn = 0
         self.right = 0
@@ -21,18 +17,14 @@ class GameState:
 
     def update_mode(self):
         if self.random:
-            self.mode = random.choice([Mode.state, Mode.capital])
+            self.mode = random.choice([Mode.first_half_pair, Mode.second_half_pair])
 
-    def get_state_capital_pair(self):
+    def get_pair(self):
         index = random.randint(0,len(self.questions)-1)
         question = self.questions[index]
         #if not self.repeat: #T or F
         #    self.questions = self.questions[:index] + self.questions[index+1:]
         return question #can say get q, get answer because it knows what mode is (another option)
-
-# use for testing
-#   def print_2(self):
-#       print 2
 
     def compute_percent_correct(self):
         if self.right + self.wrong == 0:
@@ -50,8 +42,8 @@ class GameState:
 
 
 class Mode(): #was Enum
-    state = 0
-    capital = 1
+    first_half_pair = 0
+    second_half_pair = 1
     random = 2
 
 class QuestionFile():

@@ -62,14 +62,43 @@ def state_capital_pairs():
     if user_input == "4":
         return QuestionFile.multiplication
     if user_input == "5":
+        print(
+            "\nI see you want to add a new file. Please format it correctly."
+            "\n"
+            "\nIn the file (starting on first line):"
+            "\n  First half of pair, Second half of Pair"
+            "\n  First half of pair, Second half of Pair"
+            "\n  ..."
+            "\n"
+            "\nFile naming:"
+            "\n  name.txt"
+            )
+        user_file = input("What is the name (including extention) of your file?")
+        QuestionFile.user = #####
         return QuestionFile.user
+        print(
+            "\nWe'll ask quiz you by giving you one 'side' of your flashcard and you tell us the "
+            "other 'side'."
+            "\n"
+            "\nFor example, we might ask:"
+            "\n  What is the capital of Nebraska? [In code: 'What is the capital of %s? ' % state]"
+            "\n  or"
+            "\n  What state has the capital Lincoln? [In code: 'What state has the capital %s? '"
+            " % capital]"
+            "\n"
+            "\n  In this case, state is a one-word description of one 'side' of the pair and "
+            "capital is the other."
+            "\n"
+            )
 
-    print("Learn to type, punk.\n")
+#make game.get_message and get your messages
+
+    print("Learn to type, punk. Choose [1,2,3,4,5]\n")
 
     # FIXME: use a dictionary for constant time lookups.
     pairs = []
 
-    with open(user_file_name, 'r') as f:
+    with open(####, 'r') as f:
         for line in f.read().splitlines():
             pairs.append(tuple(line.split(',')))
     print(pairs)
@@ -114,14 +143,16 @@ def ask_turns_goal():
 def asks_user_question(game):
     """Gives user one side of the pair and asks them to type other side of the pair."""
 
-    state, capital = game.get_state_capital_pair()
+    first_half_pair, second_half_pair = game.get_pair()
+    message_ask_for_second_half_pair =
+    message_ask_for_first_half_pair =
 
     if game.mode == Mode.capital:
-        user_answer = input("What is the capital of %s? " % state)
-        return user_answer, capital
+        user_answer = input(message_ask_for_second_half_pair)
+        return user_answer, second_half_pair
     elif game.mode == Mode.state:
-        user_answer = input("What state has the capital %s? " % capital)
-        return user_answer, state
+        user_answer = input(message_ask_for_first_half_pair)
+        return user_answer, first_half_pair
     # FIXME: make prompt more general.
 
 
@@ -195,12 +226,12 @@ def check_if_want_quit_game(user_answer, time_start, game):
 def judge_spelling(true_answer, user_answer, game):
     """Creates a ratio showing how close to correct the user was."""
 
-    min_spelling_ratio = 0.75
+    MIN_SPELLING_RATIO = 0.75
 
     how_correct_spell = SequenceMatcher(None, true_answer.lower(), user_answer.lower())
     spelling_ratio = how_correct_spell.ratio()
 
-    if spelling_ratio >= min_spelling_ratio:
+    if spelling_ratio >= MIN_SPELLING_RATIO:
         game.right += 1
         if spelling_ratio == 1:
             game.correct_spell += 1
@@ -302,8 +333,8 @@ def game_summary(game, pretty_time):
     print("Percent spelled correct: %d" %(game.compute_percent_spelled_correct()))
     print("Percent spelled almost correct: %d" %(game.compute_percent_spelled_almost_correct()))
 
-    if (game.compute_percent_spelled_correct() + game.compute_percent_spelled_almost_correct())
-       < MEMORIZE_THRESHOLD:
+    if (game.compute_percent_spelled_correct() + game.compute_percent_spelled_almost_correct()) < MEMORIZE_THRESHOLD:
         print("You spelled %d very wrong, so I expect you were typing entirely wrong answers. "
               "Better hit the flashcards again!" %(game.compute_percent_spelled_very_wrong()))
+
         # FIXME: Add list of words that were spelled wrong. Need to keep track with db or list.
