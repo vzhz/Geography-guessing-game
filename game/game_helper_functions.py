@@ -205,33 +205,35 @@ def judge_spelling(true_answer, user_answer, game):
             game.correct_spell += 1
         else:
             game.little_wrong_spell += 1
-            print ("Technically the correct spelling of %s is %s but you are close enough we'll "
-                   "call it good!" %(user_answer, true_answer)
-        fancy_print(blue("Now at %d points with %d percent correct!"
-            %(game.right, game.compute_percent_correct())))
+            print("Technically the correct spelling of %s is %s but you are close enough we'll "
+                  "call it good!" %(user_answer, true_answer))
+        fancy_print("Now at %d points with %d percent correct!" % (game.right,
+                                                                   game.compute_percent_correct()))
     else:
         game.wrong += 1
         game.so_wrong_spell += 1
         fancy_print("Wrong! The correct answer is %s! Still %d points, now %d percent correct!"
-            %(true_answer, game.right, game.compute_percent_correct()))
+                    % (true_answer, game.right, game.compute_percent_correct()))
 
     action_based_on_percent(game)
-    #FIXME: Make difficulty levels that have defaults of harder min_spelling_ratios, etc. and user choses their level.
+    # FIXME: Make difficulty levels that have defaults of harder min_spelling_ratios, etc.
+    # and user choses their level.
 
 
 def make_scoreboard():
-    if os.path.isfile('scores.db'): #os talks to console
+    """Creates game scoreboard using SQLite (os talks to console, creates db file, saves, "
+      "closes connection)."""
+
+    if os.path.isfile('scores.db'):
         pass
     else:
-        #create db file for scores
         conn = sqlite3.connect('scores.db')
         c = conn.cursor()
         c.execute("""CREATE TABLE scores
-                    (name text, score integer, time unix, timer integer)""") #local variable, not access outside
-        #save your changes!
+                    (name text, score integer, time unix, timer integer)""")
         conn.commit()
-        #done with connection for now
         conn.close()
+
 
 def end_game(time_start, game):
     time_end = time.time() #end game timer
