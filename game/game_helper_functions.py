@@ -192,26 +192,33 @@ def check_if_want_quit_game(user_answer, time_start, game):
 
 
 def judge_spelling(true_answer, user_answer, game):
-    min_spelling_ratio = 0.75 #later allow user to pass it in, so they can decide how correct counts
-    #maybe I should have difficulty levels that have defaults of harder min_spelling_ratios, etc. and user choses their level
+    """Creates a ratio showing how close to correct the user was."""
+
+    min_spelling_ratio = 0.75
+
     how_correct_spell = SequenceMatcher(None, true_answer.lower(), user_answer.lower())
     spelling_ratio = how_correct_spell.ratio()
+
     if spelling_ratio >= min_spelling_ratio:
-        #repeat_questions = repeat_questions.remove(user_answer) #http://www.tutorialspoint.com/python/list_remove.htm
         game.right += 1
         if spelling_ratio == 1:
             game.correct_spell += 1
         else:
             game.little_wrong_spell += 1
-            print ("The correct spelling is %s but your spelling is so close! We'll call it good!" %true_answer)
-        fancy_print(blue("Yay, you got points! Now at %d points with %d percent correct!" %(game.right, game.compute_percent_correct())))
+            print ("Technically the correct spelling of %s is %s but you are close enough we'll "
+                   "call it good!" %(user_answer, true_answer)
+        fancy_print(blue("Now at %d points with %d percent correct!"
+            %(game.right, game.compute_percent_correct())))
     else:
         game.wrong += 1
         game.so_wrong_spell += 1
-        fancy_print("Wrong! The correct answer is %s! Still %d points, now %d percent correct!" %(true_answer, game.right, game.compute_percent_correct()))
-    action_based_on_percent(game)
+        fancy_print("Wrong! The correct answer is %s! Still %d points, now %d percent correct!"
+            %(true_answer, game.right, game.compute_percent_correct()))
 
-###end game
+    action_based_on_percent(game)
+    #FIXME: Make difficulty levels that have defaults of harder min_spelling_ratios, etc. and user choses their level.
+
+
 def make_scoreboard():
     if os.path.isfile('scores.db'): #os talks to console
         pass
