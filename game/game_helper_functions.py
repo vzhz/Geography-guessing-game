@@ -122,6 +122,7 @@ def asks_user_question(game):
     elif game.mode == Mode.state:
         user_answer = input("What state has the capital %s? " % capital)
         return user_answer, state
+    # FIXME: make prompt more general.
 
 
 def action_based_on_turns(game):
@@ -275,25 +276,21 @@ def seconds_to_pretty_time(time_of_game_play):
 
 
 def update_scoreboard(game, pretty_time):
-    """pretty_time is an output from seconds_to_pretty_time"""
-    #ask for users name
+    """Updates scoreboard with gamestate elements and pretty_time (seconds_to_pretty_time output)"""
 
     name = input("What be your flashcard-masterin' name, you little badass?")
-    #connect
+
     conn = sqlite3.connect('scores.db')
-    #cursor
     c = conn.cursor()
-    #insert row of data (once per game, at end), the dot chains the function calls
-    blob = ("INSERT INTO scores VALUES (\"%s\", %s, \"%s\", \"%s\")" %(name, game.right, datetime.datetime.now(datetime.timezone.utc), pretty_time))
-    #print(blob)
-    c.execute(blob) #pass parm. in at exe, look at tutorial, see sql query not string
-    #c.execute("INSERT INTO scores VALUES (%s, %s, %s, %s)" %(name, game.right, datetime.datetime.now(datetime.timezone.utc), pretty_time_of_game_play))\
-                                        #({name}, {score}game.right, {timestamp}datetime.datetime.now(datetime.timezone.utc), \
-                                        #{duration}pretty_time_of_game_play")
-    #save row just added
+
+    # insert row of data (once per game, at end), the dot chains the function calls
+    line_insert = ("INSERT INTO scores VALUES (\"%s\", %s, \"%s\", \"%s\")"
+                   %(name, game.right, datetime.datetime.now(datetime.timezone.utc), pretty_time))
+
+    c.execute(line_insert)
     conn.commit()
-    #close connection
     conn.close()
+
 
 def game_summary(game, pretty_time_of_game_play):
 #should I ask user how mean we should be re: spelling before we decide they weren't spelling the right word at all?
