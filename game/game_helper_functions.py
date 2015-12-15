@@ -292,15 +292,18 @@ def update_scoreboard(game, pretty_time):
     conn.close()
 
 
-def game_summary(game, pretty_time_of_game_play):
-#should I ask user how mean we should be re: spelling before we decide they weren't spelling the right word at all?
-#maybe we should have difficulty levels
+def game_summary(game, pretty_time):
+    """Prints summary of user results and progress."""
+
     MEMORIZE_THRESHOLD = 60
 
     print("Total points: %d" %(game.right))
     print("Percent correct: %d" %(game.compute_percent_correct()))
     print("Percent spelled correct: %d" %(game.compute_percent_spelled_correct()))
     print("Percent spelled almost correct: %d" %(game.compute_percent_spelled_almost_correct()))
-    #communicate with whitespace
-    if (game.compute_percent_spelled_correct() + game.compute_percent_spelled_almost_correct()) < MEMORIZE_THRESHOLD:
-        print("You spelled %d very wrong, so I expect you were typing entirely wrong answers. Better hit the flashcards again!" %(game.compute_percent_spelled_very_wrong()))
+
+    if (game.compute_percent_spelled_correct() + game.compute_percent_spelled_almost_correct())
+       < MEMORIZE_THRESHOLD:
+        print("You spelled %d very wrong, so I expect you were typing entirely wrong answers. "
+              "Better hit the flashcards again!" %(game.compute_percent_spelled_very_wrong()))
+        # FIXME: Add list of words that were spelled wrong. Need to keep track with db or list.
