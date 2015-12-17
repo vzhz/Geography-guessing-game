@@ -1,0 +1,66 @@
+Veronica code review
+This is a review of the full state of geography_guessing_game.py at commit a07af811fb25346f3f4958690ae4cff638af623f
+
+Format: 
+Line number: comment
+
+[resolved] 10: another way to write this line is
+    state, capital = line.split(",")
+this unpacks the list all at once into two named variables, so you don't have to do the pair[0], pair[1] dance on the next two lines
+
+#####General comment:
+you often see python programs written with a bunch of helper functions at the top and then a 
+if __name__ == '__main__': 
+<— tells to print when called in the commend line but not when it is called because of an import!!!!!
+<— __init__.py contains list of files that can be imported
+
+    # do all the stuff that should happen when this runs
+at the bottom. This is for modularity! What if you wanted access to all those helper functions
+in a different file (maybe it expands the game or something?) What you would want to do is be able to import this file at the top of that other file, but actually that import is going to run everything in this file -- reading in the text file, doing the while loop, everthing. Having an if-name-equals-main loop just says, "If this file is run directly from the command line, do this stuff." That way when you import your code to another file, it does all the function definition you want (doesn't call the functions though), and then sees the if and thinks, "Nope, my __name__ isn't __main__" and skips the actual gameplay part. 
+That's why you see that anyways, probably not important for you to do it here because this seems pretty standalone. But if you did want to do that, pretty much everything besides the stuff in your def's and your imports would go in that block.
+
+And your unitest
+First of all, sweet! Always write tests <3
+It looks like you copied the code from the other file to here for testing? You should usually try to write the tests to work on the code that will actually run. So, see my "import" suggestion above -- you could import the other file to this file to use the functions from it. Especially because here, your cutoffs are 20 and 60... but in your actual game code, the cutoffs are 30 and 60!!
+#####
+
+Now I've started reading from the end
+[resolved] 88: Have you considered doing it both ways? So you could have a third choice, where the question is either a state or capital and you have to give the corresponding other thing. Should the game tell you "This is a state, give me the capital" in that case? Or should the player have to figure that out themself too?
+[using this idea] You could also consider getting the game mode from the command line arguments (so, at the point where you type python goegraphy_guessing_game.py in your terminal, you'd just type your options after it before hitting enter). 
+
+95-98: I was about to suggest you use switch/case here but then I remembered python doesn't have those. Nonetheless, this could get annoying if you add more game modes to keep adding cases here. Here's a resource I found on ways to streamline this more
+http://www.pydanny.com/why-doesnt-python-have-switch-case.html
+
+[resolved] 41: Why is this function named state_or_capital_first? The inputs are the dictionary of {question: answer} and which choice the user made -- so the thing this function *does* is, it runs the game! I think maybe I would call the second argument "state_or_capital_first" because that's what that variable controls. I think "generic_dict" is a sad variable name: I know what you mean since you have two dicts and this could be either of them, but in general someone who hadn't read the rest of your code would find this very confusing. Add a comment explaining what your arguments are, or name the arguments so clearly (this first argument is a question-to-answer dict for example) that you don't need comments! (And then add comments anyway, <3 comments)
+[also learned how to select and edit all of any variable: http://stackoverflow.com/questions/16844657/sublime-text-select-all-instances-of-a-variable-and-edit-variable-name]
+
+[resolved] 45: looks like pretty much *everywhere* you want to print something you're printing a \n after it. Let me guess -- when you added that code, did you copy-paste 'print "\n"' everywhere? Copying and pasting in your code is a telltale sign that you could be making things more modular! Might I suggest
+def spaced_out_print(string):
+    # Prints a string with spacing
+    print string
+    print "\n"
+or even
+def fancy_print(string, i=1):
+    # Prints out a string with i newlines after it
+    print string
+    print "\n"*i
+(The i=1 syntax above says, if you specify a second argument I'll listen to it and use it as i, if you don't I'll just assume you mean't i=1. It's a default)
+
+[ignore because “keys” may be the question or the answer depends on what user requests] 44: variable naming. "keys" is super generic. These are the questions, or the prompts, or the challenges, or something more descriptive!
+
+54: Seems like you might get repeats here. WHat if a user just wants a drill of all 50 states, but wants to make sure they see them all? (You could do a shuffle of the keys list for example to get a random order... ) OR, super-fancy, what if the likelihood of you getting a question increased if you got it wrong -- so you get more practice on those! Or what if, when you get something right, you're guaranteed not to get it again that game! (You could do this by making a copy of all the questions (so you don't modify your global list) and just removing some things from the list of possible questions if you get it right!)
+
+[resolved] Also I don't get what the comment on line 54 means. You can mark comments as #TODO to specify things you intend to do later (as opposed to clarifying comments meant for the viewer of your code)
+
+[ignore] 55: value is just the answer, right?
+
+[resolved] 61: dont_go is a variable that means the following: if it's yes, the user wants to leave. if it's no, the user wants to stay. dont_go is a cute name but it doesn't help me understand what it represents. Could call it want_to_stay or user_wants_to_stay or something more abbreviated
+
+
+[resolved] 76: this is a repeat of line 58. Why is it in both places? 
+    
+82: Maybe this should only happen some of the time? Encouragement every single time you're in the right range might get repetitive. Or maybe it should give you one of a random set of encouragement messages (random.choice might be helpful!)
+
+84: It seems odd to have a number of rounds, but also be implemented in a while loop (rather than a for loop). I could see you asking for the number of rounds ahead of time if you were going to use a for loop so you could go that many rounds and then ask if the user wanted to quit... I don't have a suggestion here, it's just an interesting choice.
+
+[resolved] 21: I just found this. So turns is only so that the player can set how many rounds they want to go before they get this reminder? Do you think the user expects that when you ask them for the turns?

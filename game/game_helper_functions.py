@@ -63,47 +63,74 @@ def state_capital_pairs():
         return QuestionFile.multiplication
     if user_input == "5":
         print(
-            "\nI see you want to add a new file. Please format it correctly."
+            "\n"
+            "\nI see you want to add a new file. First, you need to decide the questions you will "
+            "be asked."
+            "\n"
+            "\nLet's make sure you understand the style and formatting of the questions."
+            "\nYou'll get to write a few lines of your own code!"
+            "\n"
+            "\nWe'll ask quiz you by giving you one 'side' of your flashcard and you tell us the "
+            "other 'side'."
+            "\n"
+            "\nFor example, for pairs formatted <state, capital>, we might ask:"
+            "\n  What is the capital of Nebraska? [In code: 'What is the capital of %s? ']"
+            "\n  or"
+            "\n  What state has the capital Lincoln? [In code: 'What state has the capital %s? ']"
+            "\n     Don't worry about the %s! It's just you telling the question you love it!"
+            "\n"
             "\n"
             "\nIn the file (starting on first line):"
+            "\n"
+            "\n  Question asking for second half of pair"
+            "\n  Question asking for first half of pair"
+            "\n  First half of pair, Second half of Pair"
             "\n  First half of pair, Second half of Pair"
             "\n  First half of pair, Second half of Pair"
             "\n  ..."
             "\n"
             "\nFile naming:"
             "\n  name.txt"
+            "\n"
+            "\nSave file to the same folder as the game."
+            "\n"
             )
         user_file = input("What is the name (including extention) of your file?")
-        QuestionFile.user = #####
+        QuestionFile.user = user_file
         return QuestionFile.user
-        print(
-            "\nWe'll ask quiz you by giving you one 'side' of your flashcard and you tell us the "
-            "other 'side'."
-            "\n"
-            "\nFor example, we might ask:"
-            "\n  What is the capital of Nebraska? [In code: 'What is the capital of %s? ' % state]"
-            "\n  or"
-            "\n  What state has the capital Lincoln? [In code: 'What state has the capital %s? '"
-            " % capital]"
-            "\n"
-            "\n  In this case, state is a one-word description of one 'side' of the pair and "
-            "capital is the other."
-            "\n"
-            )
 
-#make game.get_message and get your messages
+        # pause for the user to finish writing their thing and then have them confirmed that they are happy and have their thing written and saved
 
     print("Learn to type, punk. Choose [1,2,3,4,5]\n")
 
-    # FIXME: use a dictionary for constant time lookups.
-    pairs = []
 
-    with open(####, 'r') as f:
+    # FIXME: use a dictionary for constant time lookups.
+
+    # make db here and then write to it below
+    if os.path.isfile('pairs.db'):
+        pass
+    else:
+        conn = sqlite3.connect('pairs.db')
+        c = conn.cursor()
+        c.execute("""CREATE TABLE scores
+                    (name text, pair text, right integer, wrong integer, ratio blob)""")
+        conn.commit()
+        conn.close()
+
+    name = input("What be your flashcard-masterin' name, you little badass?")
+
+    with open(user_file, 'r') as f:
+        message_ask_for_second_half_pair = f.readline()
+        message_ask_for_first_half_pair = f.readline()
         for line in f.read().splitlines():
-            pairs.append(tuple(line.split(',')))
-    print(pairs)
-    print(len(pairs))
-    return pairs
+            pair = tuple(line.split(','))
+            conn = sqlite3.connect('pairs.db')
+            c = conn.cursor()
+            line_insert = ("INSERT INTO pairs VALUES (\"%s\", \"%s\", "%d", "%d", "%d")"
+                           %(name, pair, <counter for this pair.right>, <counter for this pair.wrong>, <output of ratio calc>))
+            c.execute(line_insert)
+            conn.commit()
+            conn.close()
 
 
 def ask_mode():
@@ -147,7 +174,7 @@ def asks_user_question(game):
     message_ask_for_second_half_pair =
     message_ask_for_first_half_pair =
 
-    if game.mode == Mode.capital:
+    if game.mode == Mode.second_half_pair:
         user_answer = input(message_ask_for_second_half_pair)
         return user_answer, second_half_pair
     elif game.mode == Mode.state:
@@ -306,10 +333,8 @@ def seconds_to_pretty_time(time_of_game_play):
     # str(datetime.timedelta(seconds=666))
 
 
-def update_scoreboard(game, pretty_time):
+def update_scoreboard(name, game, pretty_time):
     """Updates scoreboard with gamestate elements and pretty_time (seconds_to_pretty_time output)"""
-
-    name = input("What be your flashcard-masterin' name, you little badass?")
 
     conn = sqlite3.connect('scores.db')
     c = conn.cursor()
