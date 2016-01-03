@@ -1,5 +1,5 @@
-“What is the capital of %s? “ % state
-“What state has the capital %s? “ % capital
+What is the capital of %s?
+What state has the capital %s?
 Alabama,Montgomery
 Alaska,Juneau
 Arizona,Phoenix

@@ -4,6 +4,7 @@
 import datetime
 from difflib import SequenceMatcher
 import os
+import random
 import sqlite3
 import sys
 import time
@@ -17,7 +18,7 @@ from gamestate import Mode
 
 
 def check_version():
-    """Tests if Python version is 3.5.x and print user instructions if it is not."""
+    """Tests if Python version is >= 3.5.x and print user instructions if it is not."""
 
     message = (
         "Hey asshole, did you even read the README? You're using the wrong Python "
@@ -25,10 +26,10 @@ def check_version():
     )
     prompt = "Would you like to leave and restart after opening with the correct version [y,n]?:"
 
-    if not (sys.version_info[0] == 3 and sys.version_info[1] == 5):
+    if sys.version_info[0] < 3 or (sys.version_info[0] == 3 and sys.version_info[1] < 5):
         print(red(message))
         if input(prompt).lower() in ["y", "yes"]:
-            print(bold("Remember to type 'Python3'"))
+            print(bold("Remember to type 'python3'"))
             exit()
 
 
@@ -38,7 +39,7 @@ def fancy_print(string, i=1):
     print(string + "\n" * i)
 
 
-def state_capital_pairs():
+def choose_flashcard_file():
     """Reads flashcard text file and assigns the pairs to list"""
 
     user_file_name = input(
@@ -51,17 +52,17 @@ def state_capital_pairs():
         "\n  5: If want to load your own file."
         "\n"
         "\nType your choice [1,2,3,4,5]: "
-        ).lower()
+        )
 
-    if user_input == "1":
-        return QuestionFile.us_state_capital
-    if user_input == "2":
-        return QuestionFile.french_food
-    if user_input == "3":
-        return QuestionFile.metric
-    if user_input == "4":
-        return QuestionFile.multiplication
-    if user_input == "5":
+    if user_file_name == "1":
+        file_choice = "us_state_capitals.txt"
+    elif user_file_name == "2":
+        file_choice = "frenchfood_englishfood.txt"
+    elif user_file_name == "3":
+        file_choice = "metric.txt"
+    elif user_file_name == "4":
+        file_choice = "multiplication.txt"
+    elif user_file_name == "5":
         print(
             "\n"
             "\nI see you want to add a new file. First, you need to decide the questions you will "
@@ -95,49 +96,51 @@ def state_capital_pairs():
             "\nSave file to the same folder as the game."
             "\n"
             )
-        user_file = input("What is the name (including extention) of your file?")
-        QuestionFile.user = user_file
-        return QuestionFile.user
+        file_choice = input("What is the name (including extention) of your file?")
+    else:
+        print("Learn to type, punk. Choose [1,2,3,4,5]\n")
+        file_choice = choose_flashcard_file()
+    return file_choice
 
         # pause for the user to finish writing their thing and then have them confirmed that they are happy and have their thing written and saved
 
-    print("Learn to type, punk. Choose [1,2,3,4,5]\n")
 
-
-    # FIXME: use a dictionary for constant time lookups.
-
-    # make db here and then write to it below
-    if os.path.isfile('pairs.db'):
-        pass
-    else:
+def create_pairs_table():
+    if not os.path.isfile('pairs.db'): # technically, shouldn't hardcode db filename, use variable
         conn = sqlite3.connect('pairs.db')
         c = conn.cursor()
-        c.execute("""CREATE TABLE scores
+        c.execute("""CREATE TABLE pairs
                     (name text, pair text, right integer, wrong integer, ratio blob)""")
         conn.commit()
         conn.close()
+        # needs logic to give more or less
+        # seperate pair into first and second half of pair
 
+
+def ask_user_name():
     name = input("What be your flashcard-masterin' name, you little badass?")
+    return name
 
+
+def read_flashcards_set(user_file, name):
+    pairs_list = []
     with open(user_file, 'r') as f:
         message_ask_for_second_half_pair = f.readline()
         message_ask_for_first_half_pair = f.readline()
         for line in f.read().splitlines():
-            pair = tuple(line.split(','))
+            pairs_list.append(line.split(','))
             conn = sqlite3.connect('pairs.db')
             c = conn.cursor()
-            line_insert = ("INSERT INTO pairs VALUES (\"%s\", \"%s\", "%d", "%d", "%d")"
-                           %(name, pair, <counter for this pair.right>, <counter for this pair.wrong>, <output of ratio calc>))
-            c.execute(line_insert)
+#            line_insert = ("INSERT INTO pairs VALUES (\"%s\", \"%s\", "%d", "%d", "%d")"
+#                           %(name, pair, <counter for this pair.right>, <counter for this pair.wrong>, <output of ratio calc>))
+#            c.execute(line_insert)
             conn.commit()
             conn.close()
-
+    return message_ask_for_second_half_pair, message_ask_for_first_half_pair, pairs_list
 
 def ask_mode():
     """Asks user if s/he would like to respond with the first or second element of the pair
        when given the other."""
-
-    #FIXME: Gives 3rd option when 1st option is requested.
 
     while True:
         user_input = input(
@@ -151,9 +154,9 @@ def ask_mode():
         ).lower()
 
         if user_input == "1":
-            return Mode.capital
+            return Mode.second_half_pair
         if user_input == "2":
-            return Mode.state
+            return Mode.first_half_pair
         if user_input == "3":
             return Mode.random
 
@@ -167,20 +170,22 @@ def ask_turns_goal():
     return turns_goal
 
 
-def asks_user_question(game):
+def asks_user_question(game, message_ask_for_second_half_pair,  message_ask_for_first_half_pair):
     """Gives user one side of the pair and asks them to type other side of the pair."""
 
     first_half_pair, second_half_pair = game.get_pair()
-    message_ask_for_second_half_pair =
-    message_ask_for_first_half_pair =
 
-    if game.mode == Mode.second_half_pair:
-        user_answer = input(message_ask_for_second_half_pair)
+    if game.mode == Mode.random:
+        mode = random.choice([Mode.first_half_pair, Mode.second_half_pair])
+    else:
+        mode = game.mode
+
+    if mode == Mode.second_half_pair:
+        user_answer = input(message_ask_for_second_half_pair % first_half_pair)
         return user_answer, second_half_pair
-    elif game.mode == Mode.state:
-        user_answer = input(message_ask_for_first_half_pair)
+    elif mode == Mode.first_half_pair:
+        user_answer = input(message_ask_for_first_half_pair % second_half_pair)
         return user_answer, first_half_pair
-    # FIXME: make prompt more general.
 
 
 def action_based_on_turns(game):
@@ -214,7 +219,7 @@ def action_based_on_percent(game):
 
     you_suck_message = [
         "Keep trying! You'll get it!",
-        "C'on, human.",
+        "Come on, human.",
         "Try harder?"
         ]
     you_rock_message = [
@@ -250,7 +255,7 @@ def check_if_want_quit_game(user_answer, time_start, game):
                 print(red("Invalid input: y or n, please!"))
 
 
-def judge_spelling(true_answer, user_answer, game):
+def evaluate_user_answer_spelling(true_answer, user_answer, game):
     """Creates a ratio showing how close to correct the user was."""
 
     MIN_SPELLING_RATIO = 0.75
@@ -282,17 +287,19 @@ def judge_spelling(true_answer, user_answer, game):
 def make_scoreboard():
     """Creates game scoreboard using SQLite (os talks to console, creates db file, saves, "
       "closes connection)."""
+## in """ don't need quotes at the end of a line
 
-    if os.path.isfile('scores.db'):
-        pass
-    else:
+    if not os.path.isfile('scores.db'):
         conn = sqlite3.connect('scores.db')
         c = conn.cursor()
         c.execute("""CREATE TABLE scores
                     (name text, score integer, time unix, timer integer)""")
         conn.commit()
         conn.close()
-
+# maybe tracking wrong answers
+# store more than you might want to show
+# multiple files = more crap flying around
+# easier to join mulple tables in one db than multiple db's
 
 def end_game(time_start, game):
     """Calls functions needed to end the game, stops game timer, and calculates duration of game."""
@@ -328,12 +335,15 @@ def seconds_to_pretty_time(time_of_game_play):
     hours -= days * 24
     return "%d d %02d h %02d m %02d" %(days, hours, mins, secs)
 
+    # hot tip : give computers computer things and humans human things
+    # therefore give the pretty one (at last minute) to the human and the second to the db so math and graphs etc can happen later
+
     # alternatively:
     # import datetime
     # str(datetime.timedelta(seconds=666))
 
 
-def update_scoreboard(name, game, pretty_time):
+def update_scoreboard(game, pretty_time):
     """Updates scoreboard with gamestate elements and pretty_time (seconds_to_pretty_time output)"""
 
     conn = sqlite3.connect('scores.db')
@@ -341,7 +351,7 @@ def update_scoreboard(name, game, pretty_time):
 
     # insert row of data (once per game, at end), the dot chains the function calls
     line_insert = ("INSERT INTO scores VALUES (\"%s\", %s, \"%s\", \"%s\")"
-                   %(name, game.right, datetime.datetime.now(datetime.timezone.utc), pretty_time))
+                   %(game.name, game.right, datetime.datetime.now(datetime.timezone.utc), pretty_time))
 
     c.execute(line_insert)
     conn.commit()

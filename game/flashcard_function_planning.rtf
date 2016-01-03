@@ -1,0 +1,98 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1348\cocoasubrtf170
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww4020\viewh12480\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\fs24 \cf0 TODO\
+132 comment or fix\
+\
+STILL TO DO\
+338 pretty one (at last minute) to the human and the second to the db so math and graphs etc can happen later\
+get database working and write logic for giving things you are bad at more often\
+\
+\
+\
+\
+check_version \
+[in] prompt: leave or restart \
+[out] n/a\
+\
+ask_which_flashcard\
+[in]\
+[out] var file_choice  \
+\
+create_pairs_table\
+[in] n/a\
+[out] n/a\
+\
+ask_user_name\
+[in] name (input)\
+[out] name\
+\
+read_flashcard_set\
+[in] file_choice, name\
+assign question wording to vars\
+copy pairs to db\
+make pairs list\
+[out] var, pairs.db, list\
+\
+ask_mode\
+[in] mode pref. (input)\
+[out] Mode.<mode>\
+\
+ask_turns_goal\
+[in] turns goal (input)\
+[out] turns_goal\
+\
+MOVE INTO GAMESTATE (read more about methods)\
+asks_user_question\
+[in] game \
+[out] user_\
+ MOVE THIS TOO\
+action_based_on_turns\
+[in] game\
+[out] n/a\
+AND THIS FUUUUU\
+action_based_on_percent\
+[in] game\
+[out] n/a\
+\
+check_if_want_quit_game\
+[in] user_answer, time_start, game\
+[out] n/a\
+\
+judge_spelling\
+[in] true_answer, user_answer, gmae\
+[out] n/a\
+\
+make_scoreboard_table\
+[in]\
+[out]\
+\
+helper fcn starts game and gamestate methods continue\
+doesn\'92t print but returns values for caller to print\
+inputs as user_interface.py\
+MOVE time_start TO GAMESTATE and MOVE WHOLE DARNED THING TO GAMESTATE\
+end_game\
+[in] time_start, game\
+[out] n/a\
+\
+not in gamestate because need to have for historical data and won\'92t be playing then\
+seconds_to_pretty_time\
+[in] time_of_game_play\
+[out] string version of pretty time\
+\
+update_scoreboard\
+[in] name, game, time_of_game_play (ugly time, haha)\
+[out] n/a\
+\
+game_summary\
+[in] game, pretty_time\
+[out] print out of how well you did\
+ \
+\
+Each round:\
+\
+\
+End game:}

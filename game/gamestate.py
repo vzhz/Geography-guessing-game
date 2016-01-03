@@ -1,12 +1,11 @@
 import random
 
 class GameState:
-    def __init__(self, questions, mode, turns_goal):
-        self.QuestionFile = questionfile
-        self.questions = questions
+    def __init__(self, pairs_list, name, mode, turns_goal):
+        self.pairs_list = pairs_list
+        self.name = name
         self.mode = mode #guess state whole round, guess capital whole round, guess mix
-        assert(mode in (Mode.first_half_pair, Mode.second_half_pair))
-        self.random = random
+        assert(mode in (Mode.first_half_pair, Mode.second_half_pair, Mode.random))
         self.turns_goal = turns_goal
         self.current_turn = 0
         self.right = 0
@@ -15,16 +14,12 @@ class GameState:
         self.little_wrong_spell = 0
         self.correct_spell = 0
 
-    def update_mode(self):
-        if self.random:
-            self.mode = random.choice([Mode.first_half_pair, Mode.second_half_pair])
-
     def get_pair(self):
-        index = random.randint(0,len(self.questions)-1)
-        question = self.questions[index]
+        index = random.randint(0,len(self.pairs_list)-1)
+        pair = self.pairs_list[index]
         #if not self.repeat: #T or F
         #    self.questions = self.questions[:index] + self.questions[index+1:]
-        return question #can say get q, get answer because it knows what mode is (another option)
+        return pair #can say get q, get answer because it knows what mode is (another option)
 
     def compute_percent_correct(self):
         if self.right + self.wrong == 0:
@@ -45,10 +40,3 @@ class Mode(): #was Enum
     first_half_pair = 0
     second_half_pair = 1
     random = 2
-
-class QuestionFile():
-    us_state_capital = 0
-    french_food = 1
-    metric = 2
-    multiplication = 3
-    user = 4
